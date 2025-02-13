@@ -1,0 +1,17 @@
+{
+  "name": "ai-chat-template",
+  "scripts": {
+    "dev": "cd frontend && npm run build && cd .. && wrangler dev --remote",
+    "deploy": "cd frontend && npm run build && cd .. && wrangler deploy --minify"
+  },
+  "dependencies": {
+    "@ai-sdk/google": "^1.1.11",
+    "ai": "^4.1.24",
+    "hono": "^4.6.20"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250109.0",
+    "concurrently": "^8.2.2",
+    "wrangler": "^3.101.0"
+  }
+}
