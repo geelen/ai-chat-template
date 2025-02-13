@@ -1,6 +1,6 @@
 # AI chat template
 
-An unofficial template for ⚛️ React ⨉ ⚡️ Vite ⨉ ⛅️ Cloudflare Workers AI ⨉ 🔥 Hono .
+An unofficial template for ⚛️ React ⨉ ⚡️ Vite ⨉ ⛅️ Cloudflare Workers AI ⨉ 🔥 Hono.
 
 Full-stack AI chat application using Hono for the APIs and Vite for the React application (hosted using [Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/)). Provides chat functionality with [Workers AI](https://developers.cloudflare.com/workers-ai/), stores conversations in the browser's [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API), and uses [ai-sdk](https://sdk.vercel.ai/docs/introduction), [tailwindcss](https://tailwindcss.com/) and [workers-ai-provider](https://github.com/cloudflare/workers-ai-provider).
 
