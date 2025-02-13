@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import type { LanguageModelV1Middleware, LanguageModelV1StreamPart } from "ai";
 import { streamText, extractReasoningMiddleware, wrapLanguageModel } from "ai";
-import { createWorkersAI } from "../workers-ai-provider/packages/ai-provider";
+import { createWorkersAI } from "../workers-ai-provider/packages/ai-provider/src/index";
 
 interface Env {
   Bindings: {
