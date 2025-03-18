@@ -52,18 +52,19 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
             )}
           </div>
         )}
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
-          rehypePlugins={[rehypeHighlight]}
-          className="prose dark:prose-invert prose-zinc"
-          components={{
-            table: ({ children }) => (
-              <div className="overflow-x-scroll text-sm">{children}</div>
-            ),
-          }}
-        >
-          {message.content}
-        </ReactMarkdown>
+        <div className="prose dark:prose-invert prose-zinc">
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[rehypeHighlight]}
+            components={{
+              table: ({ children }) => (
+                <div className="overflow-x-scroll text-sm">{children}</div>
+              ),
+            }}
+          >
+            {message.content}
+          </ReactMarkdown>
+        </div>
       </div>
     </div>
   );
