@@ -26,8 +26,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
         className={` 
         ${
           message.role === "user"
-            ? "max-w-[80%] rounded-2xl px-3 py-2 border border-zinc-200/10 bg-zinc-100 text-black dark:bg-zinc-700 dark:text-white"
-            : "dark:bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 w-full"
+            ? "max-w-[80%] rounded-2xl px-3 py-2 border border-zinc-200/10 bg-zinc-100 text-black"
+            : " text-zinc-900 w-full"
         }`}
       >
         {message.reasoning && (
@@ -36,7 +36,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
               onClick={() =>
                 setShowMessageReasoning(index, !message.reasoning!.collapsed)
               }
-              className="flex items-center text-xs text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300"
+              className="flex items-center text-xs text-zinc-500 hover:text-zinc-700"
             >
               {!message.reasoning.collapsed ? (
                 <ChevronDown size={16} />
@@ -46,13 +46,13 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
               <span>Reasoning</span>
             </button>
             {!message.reasoning.collapsed && (
-              <div className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+              <div className="text-xs text-zinc-500 mt-1">
                 {message.reasoning.content}
               </div>
             )}
           </div>
         )}
-        <div className="prose dark:prose-invert prose-zinc">
+        <div className="prose prose-zinc">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[rehypeHighlight]}

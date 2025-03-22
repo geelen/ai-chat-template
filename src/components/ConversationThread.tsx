@@ -2,7 +2,6 @@ import React, { useState, useEffect, FormEvent } from "react";
 import { storeName } from "../consts";
 import "../styles/scrollbar.css";
 import "../styles/github.css";
-import "../styles/github-dark.css";
 import { type Conversation, type Message } from "../types";
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
@@ -155,11 +154,11 @@ const ConversationThread: React.FC<ConversationThreadProps> = ({
         <div className="max-w-2xl mx-auto w-full px-4">
           {currentConversation.messages.length === 0 ? (
             <div className="text-center">
-              <h1 className="text-4xl font-semibold text-zinc-800 dark:text-zinc-200">
+              <h1 className="text-4xl font-semibold text-zinc-800">
                 What do you want to know?
               </h1>
               <div className="mt-4">
-                <h2 className="mt-2 text-md opacity-70 dark:text-zinc-400">
+                <h2 className="mt-2 text-md opacity-70">
                   AI chat template built with React, Vite and Cloudflare Workers
                   AI.
                   <div className="mt-1 w-full">
@@ -186,7 +185,7 @@ const ConversationThread: React.FC<ConversationThreadProps> = ({
                 />
               ))}
               {isLoading && !streamStarted && (
-                <div className="text-center text-sm text-zinc-600 dark:text-zinc-400">
+                <div className="text-center text-sm text-zinc-600">
                   Thinking...
                 </div>
               )}

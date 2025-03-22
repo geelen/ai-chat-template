@@ -55,7 +55,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
           fixed md:relative
           z-30 md:z-auto
           h-full
-          bg-zinc-50 dark:bg-zinc-900
+          bg-zinc-50
           transition-all duration-300
           
           ${
@@ -75,8 +75,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
             className="
               rounded-lg p-[0.4em]
               hover:bg-zinc-100 hover:cursor-pointer
-              
-              transition-colors text-zinc-600 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-500"
+              transition-colors text-zinc-600 hover:text-zinc-800"
           >
             {sidebarVisible ? (
               <PanelLeftClose size={20} />
@@ -87,8 +86,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
           <button
             className="rounded-lg p-[0.4em]
               hover:bg-zinc-100 hover:cursor-pointer
-              transition-colors text-zinc-600 dark:text-zinc-400 
-              hover:text-zinc-800 dark:hover:text-zinc-500 dark:hover:bg-zinc-800"
+              transition-colors text-zinc-600 hover:text-zinc-800"
             onClick={startNewConversation}
           >
             <SquarePen size={20} />
@@ -97,8 +95,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
         <div
           className=" h-[calc(100%-3rem)]
         overflow-y-scroll scrollbar-thin 
-          dark:scrollbar-thumb-zinc-700 dark:scrollbar-track-zinc-900
-        flex flex-col justify-between border-r border-zinc-200 dark:border-zinc-700 transition-all duration-300"
+        flex flex-col justify-between border-r border-zinc-200 transition-all duration-300"
         >
           <div className="flex flex-col">
             <ul className="p-2 space-y-1">
@@ -108,8 +105,8 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
                   className={`cursor-pointer p-2 transition-colors rounded-lg ${
                     conversation.id === conversationId ||
                     (!conversationId && !conversation.id)
-                      ? "bg-zinc-200 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100"
-                      : "hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-300"
+                      ? "bg-zinc-200 text-zinc-900"
+                      : "hover:bg-zinc-200 text-zinc-600"
                   }`}
                   onClick={() => handleConversationClick(conversation.id)}
                 >

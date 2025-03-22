@@ -87,7 +87,7 @@ const ChatApp: React.FC<ChatAppProps> = ({ token }) => {
   };
 
   return (
-    <div className="flex h-dvh w-screen overflow-clip bg-white dark:bg-zinc-800">
+    <div className="flex h-dvh w-screen overflow-clip bg-white">
       <div className="flex flex-row flex-grow flex-1 overflow-hidden relative">
         <ChatSidebar
           sidebarVisible={sidebarVisible}

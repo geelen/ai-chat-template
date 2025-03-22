@@ -52,7 +52,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
   };
 
   return (
-    <div className="relative rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 shadow-sm">
+    <div className="relative rounded-lg border border-zinc-200 bg-white shadow-sm">
       <form
         onSubmit={handleSubmit}
         className={`w-full items-center ${messagesCount === 0 ? "" : "flex"}`}
@@ -63,7 +63,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
           rows={1}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="w-full flex-1 p-3 bg-transparent resize-none focus:outline-none dark:text-white"
+          className="w-full flex-1 p-3 bg-transparent resize-none focus:outline-none"
           placeholder={
             messagesCount === 0 ? "Ask anything..." : "Type your message..."
           }
@@ -76,15 +76,11 @@ const ChatInput: React.FC<ChatInputProps> = ({
             className={`m-2 flex items-center gap-2 px-3 py-1.5 rounded-lg border
               ${
                 reasoningEnabled
-                  ? "border-blue-500 dark:border-blue-400 bg-blue-200 dark:bg-blue-900/20"
-                  : "border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900"
+                  ? "border-blue-500 bg-blue-200"
+                  : "border-zinc-200 bg-white"
               }
-              hover:bg-blue-100 dark:hover:bg-blue-900/20 
-              ${
-                reasoningEnabled
-                  ? "text-blue-700 dark:text-blue-400"
-                  : "text-zinc-900 dark:text-zinc-100"
-              }`}
+              hover:bg-blue-100 
+              ${reasoningEnabled ? "text-blue-700" : "text-zinc-900"}`}
             title={
               reasoningEnabled ? "Reasoning enabled" : "Reasoning disabled"
             }
@@ -97,7 +93,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
             onClick={
               isLoading && streamStarted ? () => controller.abort() : undefined
             }
-            className="m-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg p-2 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-300"
+            className="m-2 hover:bg-zinc-100 rounded-lg p-2 text-zinc-600 hover:text-zinc-900"
             disabled={!isLoading && !input.trim()}
           >
             {isLoading && streamStarted ? (
