@@ -158,6 +158,22 @@ const ConversationThread: React.FC<ConversationThreadProps> = ({
               <h1 className="text-4xl font-semibold text-zinc-800 dark:text-zinc-200">
                 What do you want to know?
               </h1>
+              <div className="mt-4">
+                <h2 className="mt-2 text-md opacity-70 dark:text-zinc-400">
+                  AI chat template built with React, Vite and Cloudflare Workers
+                  AI.
+                  <div className="mt-1 w-full">
+                    Find the source code on{" "}
+                    <a
+                      className="text-blue-700"
+                      href="https://github.com/thomasgauvin/ai-chat-template"
+                    >
+                      GitHub
+                    </a>
+                    .
+                  </div>
+                </h2>
+              </div>
             </div>
           ) : (
             <div className="py-4 px-4 space-y-4">
