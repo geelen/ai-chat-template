@@ -120,7 +120,7 @@ const ConversationThread: React.FC<ConversationThreadProps> = ({
     setConversations((prev) => {
       const updated = [...prev]
       const conv = updated.find((c) => c.id === conversationId)
-      if (conv && conv.messages?.at(-1) !== userMessage) {
+      if (conv && conv.messages?.[conv.messages.length - 1] !== userMessage) {
         conv.messages.push(userMessage)
       }
       return updated
