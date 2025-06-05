@@ -5,7 +5,8 @@ import ConversationThread from "./ConversationThread.tsx";
 import { storeName } from "../consts.ts";
 import { type Conversation } from "../types";
 import { useIndexedDB } from "../hooks/useIndexedDB";
-import { availableModels, type Model } from "../types/models";
+import { type Model } from "../types/models";
+import { getSelectedModel, setSelectedModel as saveSelectedModel } from "../utils/modelPreferences";
 
 interface ChatAppProps {}
 
@@ -15,12 +16,17 @@ const ChatApp: React.FC<ChatAppProps> = () => {
     undefined
   );
   const [sidebarVisible, setSidebarVisible] = useState<boolean>(true);
-  const [selectedModel, setSelectedModel] = useState<Model>(availableModels[0]);
+  const [selectedModel, setSelectedModel] = useState<Model>(getSelectedModel());
   const [apiKeyUpdateTrigger, setApiKeyUpdateTrigger] = useState<number>(0);
   const db = useIndexedDB();
 
   const handleApiKeyUpdate = () => {
     setApiKeyUpdateTrigger(prev => prev + 1);
+  };
+
+  const handleModelChange = (model: Model) => {
+    setSelectedModel(model);
+    saveSelectedModel(model);
   };
 
   // set up conversations on app load
@@ -104,7 +110,7 @@ const ChatApp: React.FC<ChatAppProps> = () => {
           editConversationTitle={editConversationTitle}
           startNewConversation={startNewConversation}
           selectedModel={selectedModel}
-          onModelChange={setSelectedModel}
+          onModelChange={handleModelChange}
           apiKeyUpdateTrigger={apiKeyUpdateTrigger}
         />
         <div className="flex flex-col flex-grow h-full w-[calc(100%-16rem)]">
