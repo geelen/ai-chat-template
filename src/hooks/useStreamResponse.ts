@@ -32,7 +32,12 @@ export const useStreamResponse = ({
         const groqProvider = createGroq({ apiKey });
         return groqProvider(model.modelId);
       case 'anthropic':
-        const anthropicProvider = createAnthropic({ apiKey });
+        const anthropicProvider = createAnthropic({ 
+          apiKey,
+          headers: {
+            'anthropic-dangerous-direct-browser-access': 'true'
+          }
+        });
         return anthropicProvider(model.modelId);
       default:
         throw new Error(`Unsupported provider: ${model.provider.id}`);
