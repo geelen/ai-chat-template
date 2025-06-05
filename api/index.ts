@@ -103,14 +103,14 @@ app.post('/api/chat', async (c) => {
       sendReasoning: true,
     })
   } catch (error) {
-    return c.json({ error: 'Chat completion failed' }, 500)
+    return c.json({ error: `Chat completion failed. ${(error as Error)?.message}` }, 500)
   }
 })
 
 // Handle static assets and fallback routes
 app.all('*', async (c) => {
   if (c.env.ASSETS) {
-    return c.env.ASSETS.fetch(c.req)
+    return c.env.ASSETS.fetch(c.req.raw)
   }
   return c.text('Not found', 404)
 })
