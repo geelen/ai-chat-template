@@ -5,6 +5,7 @@ import ConversationThread from "./ConversationThread.tsx";
 import { storeName } from "../consts.ts";
 import { type Conversation } from "../types";
 import { useIndexedDB } from "../hooks/useIndexedDB";
+import { availableModels, type Model } from "../types/models";
 
 interface ChatAppProps {
   token?: string;
@@ -16,6 +17,7 @@ const ChatApp: React.FC<ChatAppProps> = ({ token }) => {
     undefined
   );
   const [sidebarVisible, setSidebarVisible] = useState<boolean>(true);
+  const [selectedModel, setSelectedModel] = useState<Model>(availableModels[0]);
   const db = useIndexedDB();
 
   // set up conversations on app load
@@ -98,6 +100,8 @@ const ChatApp: React.FC<ChatAppProps> = ({ token }) => {
           deleteConversation={deleteConversation}
           editConversationTitle={editConversationTitle}
           startNewConversation={startNewConversation}
+          selectedModel={selectedModel}
+          onModelChange={setSelectedModel}
         />
         <div className="flex flex-col flex-grow h-full w-[calc(100%-16rem)]">
           <ChatNavbar

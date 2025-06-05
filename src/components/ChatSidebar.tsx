@@ -6,6 +6,8 @@ import {
   PanelLeftOpen,
   SquarePen,
 } from "lucide-react";
+import ModelSelector from "./ModelSelector";
+import { type Model } from "../types/models";
 
 interface Conversation {
   id?: number;
@@ -22,6 +24,8 @@ interface ChatSidebarProps {
   deleteConversation: (id: number) => void;
   editConversationTitle: (id: number, newTitle: string) => void;
   startNewConversation: () => void;
+  selectedModel: Model;
+  onModelChange: (model: Model) => void;
 }
 
 const ChatSidebar: React.FC<ChatSidebarProps> = ({
@@ -33,6 +37,8 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
   deleteConversation,
   editConversationTitle,
   startNewConversation,
+  selectedModel,
+  onModelChange,
 }) => {
   const handleConversationClick = (id: number | undefined) => {
     setConversationId(id);
@@ -144,6 +150,14 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
                 </li>
               ))}
             </ul>
+          </div>
+          
+          {/* Model Selector at bottom */}
+          <div className="p-2 border-t border-zinc-200">
+            <ModelSelector
+              selectedModel={selectedModel}
+              onModelChange={onModelChange}
+            />
           </div>
         </div>
       </div>
