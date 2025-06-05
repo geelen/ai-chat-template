@@ -6,7 +6,6 @@ interface UseStreamResponseProps {
   token?: string;
   conversationId?: number;
   setConversations: React.Dispatch<React.SetStateAction<Conversation[]>>;
-  reasoningEnabled: boolean;
   scrollToBottom: () => void;
 }
 
@@ -14,18 +13,15 @@ export const useStreamResponse = ({
   token,
   conversationId,
   setConversations,
-  reasoningEnabled,
   scrollToBottom,
 }: UseStreamResponseProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [streamStarted, setStreamStarted] = useState(false);
   const [controller, setController] = useState(new AbortController());
   const aiResponseRef = useRef<string>("");
-  const aiReasoningRef = useRef<string>("");
 
   const streamResponse = async (messages: Message[]) => {
     let aiResponse = "";
-    let aiReasoning = "";
 
     try {
       const response = await fetch("/api/chat", {
@@ -36,7 +32,6 @@ export const useStreamResponse = ({
         body: JSON.stringify({
           token,
           messages,
-          reasoning: reasoningEnabled,
         }),
         signal: controller.signal,
       });
@@ -66,7 +61,7 @@ export const useStreamResponse = ({
         onTextPart: (chunk) => {
           try {
             aiResponse += chunk;
-            aiResponseRef.current = aiReasoning;
+            aiResponseRef.current = aiResponse;
 
             //custom extraction of <chat-title> tag
             const titleMatch = aiResponse.match(
@@ -101,26 +96,6 @@ export const useStreamResponse = ({
             console.log("Error in text part", e);
           }
         },
-        onReasoningPart: (chunk) => {
-          try {
-            aiReasoning += chunk;
-            aiReasoningRef.current = aiReasoning;
-
-            setConversations((prev) => {
-              const updated = [...prev];
-              const conv = updated.find((c) => c.id === conversationId);
-              if (conv) {
-                conv.messages[conv.messages.length - 1].reasoning = {
-                  collapsed: false,
-                  content: aiReasoning,
-                };
-              }
-              return updated;
-            });
-          } catch (e) {
-            console.log("Error in reasoning part", e);
-          }
-        },
       });
     } catch (error: any) {
       if (controller.signal.aborted) {
@@ -142,6 +117,5 @@ export const useStreamResponse = ({
     controller,
     streamResponse,
     aiResponseRef,
-    aiReasoningRef,
   };
 };

@@ -27,7 +27,6 @@ const ConversationThread: React.FC<ConversationThreadProps> = ({
   db,
 }) => {
   const [input, setInput] = useState<string>("");
-  const [reasoningEnabled, setReasoningEnabled] = useState(true);
 
   const { messagesEndRef, messagesContainerRef, scrollToBottom } =
     useAutoscroll();
@@ -39,12 +38,10 @@ const ConversationThread: React.FC<ConversationThreadProps> = ({
     controller,
     streamResponse,
     aiResponseRef,
-    aiReasoningRef,
   } = useStreamResponse({
     token,
     conversationId,
     setConversations,
-    reasoningEnabled,
     scrollToBottom,
   });
 
@@ -52,21 +49,12 @@ const ConversationThread: React.FC<ConversationThreadProps> = ({
     (conv) => conv.id === conversationId
   ) || { messages: [], title: "" };
 
-  const setShowMessageReasoning = (index: number, showReasoning: boolean) => {
-    setConversations((prev) => {
-      const updated = [...prev];
-      const conv = updated.find((c) => c.id === conversationId);
-      if (conv) {
-        conv.messages[index].reasoning!.collapsed = showReasoning;
-      }
-      return updated;
-    });
-  };
+
 
   //when new message chunks are streamed in, scroll to bottom
   useEffect(() => {
     scrollToBottom();
-  }, [aiReasoningRef.current, aiResponseRef.current]);
+  }, [aiResponseRef.current]);
 
   //when conversation changes, scroll to bottom
   useEffect(scrollToBottom, [conversationId]);
@@ -180,8 +168,6 @@ const ConversationThread: React.FC<ConversationThreadProps> = ({
                 <ChatMessage
                   key={index}
                   message={message}
-                  index={index}
-                  setShowMessageReasoning={setShowMessageReasoning}
                 />
               ))}
               {isLoading && !streamStarted && (
@@ -207,8 +193,6 @@ const ConversationThread: React.FC<ConversationThreadProps> = ({
             handleSubmit={handleSubmit}
             isLoading={isLoading}
             streamStarted={streamStarted}
-            reasoningEnabled={reasoningEnabled}
-            setReasoningEnabled={setReasoningEnabled}
             controller={controller}
             messagesCount={currentConversation.messages.length}
           />

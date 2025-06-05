@@ -6,7 +6,7 @@ import React, {
   Dispatch,
   SetStateAction,
 } from "react";
-import { Send, Pause, Brain } from "lucide-react";
+import { Send, Pause } from "lucide-react";
 
 interface ChatInputProps {
   input: string;
@@ -14,8 +14,6 @@ interface ChatInputProps {
   handleSubmit: (e: FormEvent) => void;
   isLoading: boolean;
   streamStarted: boolean;
-  reasoningEnabled: boolean;
-  setReasoningEnabled: (enabled: boolean) => void;
   controller: AbortController;
   messagesCount: number;
 }
@@ -26,8 +24,6 @@ const ChatInput: React.FC<ChatInputProps> = ({
   handleSubmit,
   isLoading,
   streamStarted,
-  reasoningEnabled,
-  setReasoningEnabled,
   controller,
   messagesCount,
 }) => {
@@ -69,25 +65,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
           }
           style={{ maxHeight: "200px" }}
         />
-        <div className="flex justify-between items-center">
-          <button
-            type="button"
-            onClick={() => setReasoningEnabled(!reasoningEnabled)}
-            className={`m-2 flex items-center gap-2 px-3 py-1.5 rounded-lg border
-              ${
-                reasoningEnabled
-                  ? "border-blue-500 bg-blue-200"
-                  : "border-zinc-200 bg-white"
-              }
-              hover:bg-blue-100 
-              ${reasoningEnabled ? "text-blue-700" : "text-zinc-900"}`}
-            title={
-              reasoningEnabled ? "Reasoning enabled" : "Reasoning disabled"
-            }
-          >
-            <Brain size={18} />
-            <span className="text-sm">Reasoning</span>
-          </button>
+        <div className="flex justify-end items-center">
           <button
             type={isLoading && streamStarted ? "button" : "submit"}
             onClick={
