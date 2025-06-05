@@ -16,7 +16,12 @@ const ChatApp: React.FC<ChatAppProps> = () => {
   );
   const [sidebarVisible, setSidebarVisible] = useState<boolean>(true);
   const [selectedModel, setSelectedModel] = useState<Model>(availableModels[0]);
+  const [apiKeyUpdateTrigger, setApiKeyUpdateTrigger] = useState<number>(0);
   const db = useIndexedDB();
+
+  const handleApiKeyUpdate = () => {
+    setApiKeyUpdateTrigger(prev => prev + 1);
+  };
 
   // set up conversations on app load
   useEffect(() => {
@@ -100,6 +105,7 @@ const ChatApp: React.FC<ChatAppProps> = () => {
           startNewConversation={startNewConversation}
           selectedModel={selectedModel}
           onModelChange={setSelectedModel}
+          apiKeyUpdateTrigger={apiKeyUpdateTrigger}
         />
         <div className="flex flex-col flex-grow h-full w-[calc(100%-16rem)]">
           <ChatNavbar
@@ -113,6 +119,7 @@ const ChatApp: React.FC<ChatAppProps> = () => {
             setConversations={setConversations}
             db={db}
             selectedModel={selectedModel}
+            onApiKeyUpdate={handleApiKeyUpdate}
           />
         </div>
       </div>

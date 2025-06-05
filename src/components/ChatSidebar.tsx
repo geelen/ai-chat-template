@@ -26,6 +26,7 @@ interface ChatSidebarProps {
   startNewConversation: () => void;
   selectedModel: Model;
   onModelChange: (model: Model) => void;
+  apiKeyUpdateTrigger: number;
 }
 
 const ChatSidebar: React.FC<ChatSidebarProps> = ({
@@ -39,6 +40,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
   startNewConversation,
   selectedModel,
   onModelChange,
+  apiKeyUpdateTrigger,
 }) => {
   const handleConversationClick = (id: number | undefined) => {
     setConversationId(id);
@@ -157,6 +159,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
             <ModelSelector
               selectedModel={selectedModel}
               onModelChange={onModelChange}
+              apiKeyUpdateTrigger={apiKeyUpdateTrigger}
             />
           </div>
         </div>

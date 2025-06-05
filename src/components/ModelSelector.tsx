@@ -7,11 +7,13 @@ import ApiKeyModal from './ApiKeyModal'
 interface ModelSelectorProps {
   selectedModel: Model
   onModelChange: (model: Model) => void
+  apiKeyUpdateTrigger: number
 }
 
 const ModelSelector: React.FC<ModelSelectorProps> = ({
   selectedModel,
   onModelChange,
+  apiKeyUpdateTrigger,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [apiKeyModal, setApiKeyModal] = useState<{ isOpen: boolean; model: Model | null }>({
@@ -27,7 +29,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
       statuses[model.provider.id] = hasApiKey(model.provider.id)
     })
     setApiKeyStatuses(statuses)
-  }, [])
+  }, [apiKeyUpdateTrigger])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
