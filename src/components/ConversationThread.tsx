@@ -3,33 +3,72 @@ import { storeName } from "../consts";
 import "../styles/scrollbar.css";
 import "../styles/github.css";
 import { type Conversation, type Message } from "../types";
+import { type Model } from "../types/models";
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
 import { useAutoscroll } from "../hooks/useAutoscroll";
 import { useStreamResponse } from "../hooks/useStreamResponse";
+import { setApiKey } from "../utils/apiKeys";
+import ApiKeyModal from "./ApiKeyModal";
 
 interface ConversationThreadProps {
-  token?: string;
   conversations: Conversation[];
   conversationId?: number;
   setConversationId: (id: number) => void;
   setConversations: React.Dispatch<React.SetStateAction<Conversation[]>>;
   db: any;
-  credits?: number | null;
+  selectedModel: Model;
 }
 
 const ConversationThread: React.FC<ConversationThreadProps> = ({
-  token,
   conversations,
   conversationId,
   setConversationId,
   setConversations,
   db,
+  selectedModel,
 }) => {
   const [input, setInput] = useState<string>("");
+  const [apiKeyModal, setApiKeyModal] = useState<{ isOpen: boolean; model: Model | null }>({
+    isOpen: false,
+    model: null,
+  });
 
   const { messagesEndRef, messagesContainerRef, scrollToBottom } =
     useAutoscroll();
+
+  const handleApiKeyRequired = async (model: Model): Promise<boolean> => {
+    return new Promise((resolve) => {
+      setApiKeyModal({ 
+        isOpen: true, 
+        model,
+      });
+      
+      // Store the resolve function to call when modal is closed
+      window.apiKeyModalResolve = resolve;
+    });
+  };
+
+  const handleApiKeySave = (apiKey: string) => {
+    if (apiKeyModal.model) {
+      setApiKey(apiKeyModal.model.provider.id, apiKey);
+      setApiKeyModal({ isOpen: false, model: null });
+      // Resolve the promise to continue with the request
+      if (window.apiKeyModalResolve) {
+        window.apiKeyModalResolve(true);
+        delete window.apiKeyModalResolve;
+      }
+    }
+  };
+
+  const handleApiKeyCancel = () => {
+    setApiKeyModal({ isOpen: false, model: null });
+    // Resolve the promise with false to cancel the request
+    if (window.apiKeyModalResolve) {
+      window.apiKeyModalResolve(false);
+      delete window.apiKeyModalResolve;
+    }
+  };
 
   const {
     isLoading,
@@ -39,10 +78,11 @@ const ConversationThread: React.FC<ConversationThreadProps> = ({
     streamResponse,
     aiResponseRef,
   } = useStreamResponse({
-    token,
     conversationId,
     setConversations,
     scrollToBottom,
+    selectedModel,
+    onApiKeyRequired: handleApiKeyRequired,
   });
 
   const currentConversation = conversations.find(
@@ -198,6 +238,13 @@ const ConversationThread: React.FC<ConversationThreadProps> = ({
           />
         </div>
       </div>
+
+      <ApiKeyModal
+        isOpen={apiKeyModal.isOpen}
+        onClose={handleApiKeyCancel}
+        provider={apiKeyModal.model?.provider!}
+        onSave={handleApiKeySave}
+      />
     </div>
   );
 };

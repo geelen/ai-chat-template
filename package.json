@@ -11,6 +11,8 @@
     "deploy": "npm run build && npm exec wrangler deploy"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^1.2.12",
+    "@ai-sdk/groq": "^1.2.9",
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.0.14",
     "ai": "^4.1.61",

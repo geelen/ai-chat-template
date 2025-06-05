@@ -1,50 +1,62 @@
 import { useState, useRef } from "react";
-import { processDataStream } from "@ai-sdk/ui-utils";
+import { streamText } from "ai";
+import { createGroq } from "@ai-sdk/groq";
+import { createAnthropic } from "@ai-sdk/anthropic";
 import { type Message, type Conversation } from "../types";
+import { type Model } from "../types/models";
+import { getApiKey } from "../utils/apiKeys";
 
 interface UseStreamResponseProps {
-  token?: string;
   conversationId?: number;
   setConversations: React.Dispatch<React.SetStateAction<Conversation[]>>;
   scrollToBottom: () => void;
+  selectedModel: Model;
+  onApiKeyRequired: (model: Model) => Promise<boolean>;
 }
 
 export const useStreamResponse = ({
-  token,
   conversationId,
   setConversations,
   scrollToBottom,
+  selectedModel,
+  onApiKeyRequired,
 }: UseStreamResponseProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [streamStarted, setStreamStarted] = useState(false);
   const [controller, setController] = useState(new AbortController());
   const aiResponseRef = useRef<string>("");
 
+  const getModelInstance = (model: Model, apiKey: string) => {
+    switch (model.provider.id) {
+      case 'groq':
+        const groqProvider = createGroq({ apiKey });
+        return groqProvider(model.modelId);
+      case 'anthropic':
+        const anthropicProvider = createAnthropic({ apiKey });
+        return anthropicProvider(model.modelId);
+      default:
+        throw new Error(`Unsupported provider: ${model.provider.id}`);
+    }
+  };
+
   const streamResponse = async (messages: Message[]) => {
     let aiResponse = "";
 
+    // Check if API key is available
+    let apiKey = getApiKey(selectedModel.provider.id);
+    if (!apiKey) {
+      const keyProvided = await onApiKeyRequired(selectedModel);
+      if (!keyProvided) {
+        return; // User cancelled
+      }
+      apiKey = getApiKey(selectedModel.provider.id);
+      if (!apiKey) {
+        throw new Error("No API key provided");
+      }
+    }
+
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          token,
-          messages,
-        }),
-        signal: controller.signal,
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Failed to generate response");
-      }
-
-      const stream = await response.body;
-      if (!stream) {
-        throw new Error("Failed to generate response");
-      }
+      const modelInstance = getModelInstance(selectedModel, apiKey);
 
       setConversations((prev) => {
         const updated = [...prev];
@@ -56,52 +68,67 @@ export const useStreamResponse = ({
       });
       setStreamStarted(true);
 
-      await processDataStream({
-        stream,
-        onTextPart: (chunk) => {
-          try {
-            aiResponse += chunk;
-            aiResponseRef.current = aiResponse;
+      const result = await streamText({
+        model: modelInstance,
+        messages: messages.map(msg => ({
+          role: msg.role,
+          content: msg.content,
+        })),
+        abortSignal: controller.signal,
+      });
 
-            //custom extraction of <chat-title> tag
-            const titleMatch = aiResponse.match(
-              /<chat-title>(.*?)<\/chat-title>/
-            );
-            if (titleMatch) {
-              const title = titleMatch[1].trim();
-              setConversations((prev) => {
-                const updated = [...prev];
-                const conv = updated.find((c) => c.id === conversationId);
-                if (conv) {
-                  conv.title = title;
-                }
-                return updated;
-              });
-              aiResponse = aiResponse
-                .replace(/<chat-title>.*?<\/chat-title>/, "")
-                .trim();
-            }
+      for await (const chunk of result.textStream) {
+        try {
+          aiResponse += chunk;
+          aiResponseRef.current = aiResponse;
 
+          //custom extraction of <chat-title> tag
+          const titleMatch = aiResponse.match(
+            /<chat-title>(.*?)<\/chat-title>/
+          );
+          if (titleMatch) {
+            const title = titleMatch[1].trim();
             setConversations((prev) => {
               const updated = [...prev];
               const conv = updated.find((c) => c.id === conversationId);
               if (conv) {
-                conv.messages[conv.messages.length - 1].content = aiResponse;
+                conv.title = title;
               }
               return updated;
             });
-
-            scrollToBottom();
-          } catch (e) {
-            console.log("Error in text part", e);
+            aiResponse = aiResponse
+              .replace(/<chat-title>.*?<\/chat-title>/, "")
+              .trim();
           }
-        },
-      });
+
+          setConversations((prev) => {
+            const updated = [...prev];
+            const conv = updated.find((c) => c.id === conversationId);
+            if (conv) {
+              conv.messages[conv.messages.length - 1].content = aiResponse;
+            }
+            return updated;
+          });
+
+          scrollToBottom();
+        } catch (e) {
+          console.log("Error in text chunk", e);
+        }
+      }
     } catch (error: any) {
       if (controller.signal.aborted) {
         console.log("Stream aborted");
       } else {
         console.error("Error generating response:", error);
+        // Remove the assistant message if there was an error
+        setConversations((prev) => {
+          const updated = [...prev];
+          const conv = updated.find((c) => c.id === conversationId);
+          if (conv && conv.messages[conv.messages.length - 1].role === "assistant") {
+            conv.messages.pop();
+          }
+          return updated;
+        });
       }
     } finally {
       setStreamStarted(false);

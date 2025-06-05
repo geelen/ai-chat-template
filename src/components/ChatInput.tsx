@@ -34,7 +34,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ input, setInput, handleSubmit, is
 
   return (
     <div className="relative rounded-lg border border-zinc-200 bg-white shadow-sm">
-      <form onSubmit={handleSubmit} className={`w-full items-center ${messagesCount === 0 ? '' : 'flex'}`}>
+      <form onSubmit={handleSubmit} className={`w-full items-center`}>
         <div className="flex justify-end items-center">
           <textarea
             ref={textareaRef}

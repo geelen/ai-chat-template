@@ -7,11 +7,9 @@ import { type Conversation } from "../types";
 import { useIndexedDB } from "../hooks/useIndexedDB";
 import { availableModels, type Model } from "../types/models";
 
-interface ChatAppProps {
-  token?: string;
-}
+interface ChatAppProps {}
 
-const ChatApp: React.FC<ChatAppProps> = ({ token }) => {
+const ChatApp: React.FC<ChatAppProps> = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [conversationId, setConversationId] = useState<number | undefined>(
     undefined
@@ -109,12 +107,12 @@ const ChatApp: React.FC<ChatAppProps> = ({ token }) => {
             setSidebarVisible={setSidebarVisible}
           />
           <ConversationThread
-            token={token}
             conversations={conversations}
             conversationId={conversationId}
             setConversationId={setConversationId}
             setConversations={setConversations}
             db={db}
+            selectedModel={selectedModel}
           />
         </div>
       </div>
