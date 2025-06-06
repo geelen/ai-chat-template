@@ -5,7 +5,9 @@
 - **Build**: `pnpm build` (runs TypeScript compilation then Vite build)
 - **Lint**: `pnpm lint` (ESLint)
 - **Deploy**: `pnpm deploy` (builds and deploys with Wrangler)
-- **No test suite** - tests are not configured in this project
+- **Test**: `pnpm test` (Playwright E2E tests)
+- **Test UI**: `pnpm test:ui` (Playwright test runner with UI)
+- **Test headed**: `pnpm test:headed` (Run tests in visible browser)
 
 ## Code Style
 - **Formatting**: Prettier with 2-space tabs, single quotes, no semicolons, 140 char line width

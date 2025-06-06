@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 
 .wrangler
+
+# Playwright test results
+test-results/
+playwright-report/
