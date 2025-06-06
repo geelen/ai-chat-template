@@ -136,7 +136,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
       <ApiKeyModal
         isOpen={apiKeyModal.isOpen}
         onClose={() => setApiKeyModal({ isOpen: false, model: null })}
-        provider={apiKeyModal.model?.provider!}
+        provider={apiKeyModal.model?.provider ?? { id: '', name: '', baseUrl: '', apiKeyHeader: '', documentationUrl: '' }}
         onSave={handleApiKeySave}
       />
     </>

@@ -4,6 +4,7 @@ import '../styles/scrollbar.css'
 import '../styles/github.css'
 import { type Conversation, type Message } from '../types'
 import { type Model } from '../types/models'
+import { type IDBPDatabase } from 'idb'
 import ChatMessage from './ChatMessage'
 import ChatInput from './ChatInput'
 import { useAutoscroll } from '../hooks/useAutoscroll'
@@ -16,7 +17,7 @@ interface ConversationThreadProps {
   conversationId?: number
   setConversationId: (id: number) => void
   setConversations: React.Dispatch<React.SetStateAction<Conversation[]>>
-  db: any
+  db: IDBPDatabase
   selectedModel: Model
   onApiKeyUpdate: () => void
 }
@@ -143,7 +144,7 @@ const ConversationThread: React.FC<ConversationThreadProps> = ({
       messages: currentConversation.messages,
     }
     const value = await store.put(objectData)
-    setConversationId(value)
+    setConversationId(Number(value))
   }
 
   useEffect(() => {
@@ -208,7 +209,7 @@ const ConversationThread: React.FC<ConversationThreadProps> = ({
       <ApiKeyModal
         isOpen={apiKeyModal.isOpen}
         onClose={handleApiKeyCancel}
-        provider={apiKeyModal.model?.provider!}
+        provider={apiKeyModal.model?.provider ?? { id: '', name: '', baseUrl: '', apiKeyHeader: '', documentationUrl: '' }}
         onSave={handleApiKeySave}
       />
     </div>

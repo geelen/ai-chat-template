@@ -8,11 +8,12 @@ import {
 } from "lucide-react";
 import ModelSelector from "./ModelSelector";
 import { type Model } from "../types/models";
+import { type Message } from "../types";
 
 interface Conversation {
   id?: number;
   title: string;
-  messages: any[];
+  messages: Message[];
 }
 
 interface ChatSidebarProps {

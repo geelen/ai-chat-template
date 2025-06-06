@@ -7,7 +7,9 @@ import { type Conversation } from "../types";
 import { useIndexedDB } from "../hooks/useIndexedDB";
 import { type Model } from "../types/models";
 import { getSelectedModel, setSelectedModel as saveSelectedModel } from "../utils/modelPreferences";
+import { type IDBPDatabase } from "idb";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface ChatAppProps {}
 
 const ChatApp: React.FC<ChatAppProps> = () => {
@@ -123,7 +125,7 @@ const ChatApp: React.FC<ChatAppProps> = () => {
             conversationId={conversationId}
             setConversationId={setConversationId}
             setConversations={setConversations}
-            db={db}
+            db={db as IDBPDatabase}
             selectedModel={selectedModel}
             onApiKeyUpdate={handleApiKeyUpdate}
           />

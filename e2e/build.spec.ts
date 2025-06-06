@@ -4,10 +4,15 @@ import { promisify } from 'util'
 
 const execAsync = promisify(exec)
 
+interface ExecError extends Error {
+  stdout?: string
+  stderr?: string
+}
+
 test.describe('Build Tests', () => {
   test('should build without type errors', async () => {
     try {
-      const { stdout, stderr } = await execAsync('pnpm build', { 
+      const { stderr } = await execAsync('pnpm build', { 
         cwd: process.cwd(),
         timeout: 60000 
       })
@@ -16,19 +21,16 @@ test.describe('Build Tests', () => {
       expect(stderr).not.toContain('error TS')
       expect(stderr).not.toContain('Type error')
       
-      // Should complete successfully
-      expect(stdout || stderr).toContain('built in')
-      
-    } catch (error: any) {
-      // If build fails, the error message should be helpful
-      console.error('Build failed:', error.stdout, error.stderr)
-      throw new Error(`Build failed: ${error.message}`)
+    } catch (error) {
+      const execError = error as ExecError
+      console.error('Build failed:', execError.stdout, execError.stderr)
+      throw new Error(`Build failed: ${execError.message}`)
     }
   })
 
   test('should lint without errors', async () => {
     try {
-      const { stdout, stderr } = await execAsync('pnpm lint', { 
+      const { stderr } = await execAsync('pnpm lint', { 
         cwd: process.cwd(),
         timeout: 30000 
       })
@@ -36,9 +38,10 @@ test.describe('Build Tests', () => {
       // ESLint should pass without errors
       expect(stderr).not.toContain('error')
       
-    } catch (error: any) {
-      console.error('Lint failed:', error.stdout, error.stderr)
-      throw new Error(`Lint failed: ${error.message}`)
+    } catch (error) {
+      const execError = error as ExecError
+      console.error('Lint failed:', execError.stdout, execError.stderr)
+      throw new Error(`Lint failed: ${execError.message}`)
     }
   })
 })

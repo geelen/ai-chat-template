@@ -28,10 +28,11 @@ export const useStreamResponse = ({
 
   const getModelInstance = (model: Model, apiKey: string) => {
     switch (model.provider.id) {
-      case 'groq':
+      case 'groq': {
         const groqProvider = createGroq({ apiKey })
         return groqProvider(model.modelId)
-      case 'anthropic':
+      }
+      case 'anthropic': {
         const anthropicProvider = createAnthropic({
           apiKey,
           headers: {
@@ -39,6 +40,7 @@ export const useStreamResponse = ({
           },
         })
         return anthropicProvider(model.modelId)
+      }
       default:
         throw new Error(`Unsupported provider: ${model.provider.id}`)
     }
@@ -118,7 +120,7 @@ export const useStreamResponse = ({
           console.log('Error in text chunk', e)
         }
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (controller.signal.aborted) {
         console.log('Stream aborted')
       } else {
